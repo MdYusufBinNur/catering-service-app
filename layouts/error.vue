@@ -19,6 +19,7 @@
 import Error404 from "../components/Common/Error404";
 export default {
   components: {Error404},
+  layout: 'auth',
   props: {
     error: {
       type: Object,

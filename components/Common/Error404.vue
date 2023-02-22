@@ -25,7 +25,7 @@
       >
         <v-card-title>
           <v-spacer/>
-          <nuxt-link :to="localePath('/dashboard')" style="color: #0cc0d4; text-decoration: none">
+          <nuxt-link :to="localePath('/')" style="color: #0cc0d4; text-decoration: none">
               <span class="pp-cation-reg">
                 {{ $t(' << Go back')}}
               </span>

@@ -2,3 +2,27 @@
 //
 // The variables you want to modify
 // $font-size-root: 20px;
+@font-face {
+  font-family: "Poppins";
+  src: local("Poppins"),
+  url("assets/Poppins/Poppins-Regular.ttf") format('truetype');
+}
+
+$body-font-family : "Poppins", serif;
+
+.v-data-table::v-deep th {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 20px;
+}
+.v-data-table::v-deep td {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+$data-table-regular-header-font-size : 16px;
+$data-table-mobile-row-header-font-weight: 500;
+
+$data-table-regular-row-font-size: 16px;
+

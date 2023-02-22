@@ -271,7 +271,7 @@
   background-position: right center; /* change the direction of the change here */
 }
 .btn-3 {
-  background-image: linear-gradient(to right, #84fab0 0%, #8fd3f4 51%, #84fab0 100%);
+  background-image: linear-gradient(to right, #c4ab65 0%, #b49c69 51%, #d9b674 100%);
 }
 
 </style>

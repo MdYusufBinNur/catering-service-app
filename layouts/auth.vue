@@ -17,7 +17,7 @@
   export default {
     head() {
       return  {
-        title: 'G-Care',
+        title: 'Great Spoon',
         link: [
           {
             rel: 'icon',

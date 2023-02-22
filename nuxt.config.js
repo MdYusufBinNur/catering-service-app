@@ -21,10 +21,19 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
+    // "~layouts/global.css"
   ],
+  target: 'static',
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
+    '@/plugins/globalPlugins.js',
+    '@/plugins/axios.js',
+    // '~/plugins/i18n.js',
+    '~/plugins/echarts.js',
+    // {src: './plugins/echo', mode: 'client'},
+    {src: '~/plugins/vue-pdf.js', ssr: false},
+    { src: '~plugins/vueEditor.js', mode: 'client', ssr: false },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -42,12 +51,30 @@ export default {
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
+    '@nuxtjs/auth-next',
+    "vue-toastification/nuxt",
+    ['nuxt-i18n', {
+      locales: [
+        {
+          code: 'en',
+          file: 'en-US.js',
+          name: 'English'
+        }
+      ],
+      lazy: true,
+      langDir: 'lang/',
+      defaultLocale: 'en',
+      detectBrowserLanguage: {
+        useCookie: true,
+        cookieKey: 'i18n_redirected',
+        redirectOn: 'root'  // recommended
+      }
+    }]
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: '/',
+    baseURL: 'https://service.gcare.com.bd/api/admin/v1'
   },
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
@@ -61,7 +88,7 @@ export default {
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
-      dark: true,
+      dark: false,
       themes: {
         dark: {
           primary: colors.blue.darken2,
@@ -78,5 +105,36 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+  },
+  auth: {
+    strategies: {
+      local: {
+        token: {
+          property: 'data.token',
+          global: true,
+          // required: true,
+          // type: 'Bearer'
+        },
+        user: {
+          property: false,
+          // autoFetch: true
+        },
+        endpoints: {
+          login: {url: '/admin-login', method: 'post'},
+          logout: {url: '/logout', method: 'post'},
+          user: {url: '/me', method: 'get'}
+        }
+      }
+    },
+    redirect: {
+      login: '/auth',
+      logout: '/auth',
+      callback: '/auth',
+      home: '/dashboard'
+    }
+  },
+  router: {},
+  server: {
+    port: 3001 // default: 3000
   }
 }
