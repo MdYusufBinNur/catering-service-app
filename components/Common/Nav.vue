@@ -261,7 +261,7 @@
       initUser() {
         this.username = this.$auth.user.data.username
         this.$nextTick(() => {
-          this.userRole = this.$auth.user.data.roles[0].name
+          this.userRole = this.$auth.user.data.role
           this.userImage = this.$auth.user.data.image
         })
       },

@@ -64,47 +64,12 @@
             parent: 'User'
           },
           {
-            icon: deviceIcon,
-            title: 'Devices',
-            to: '/device',
-            parent: 'Device'
+            icon: userIcon,
+            title: 'User',
+            to: '/users',
+            parent: 'User'
           },
-          {
-            icon: staffIcon,
-            title: 'Staff',
-            to: '/staff',
-            parent: 'Staff'
-          },
-          {
-            icon: settingsIcon,
-            title: 'setting',
-            to: '/setting',
-            parent: 'Setting'
-          },
-          {
-            icon: translationIcon,
-            title: 'Translation',
-            to: '/translation',
-            parent: 'Translation'
-          },
-          {
-            icon: reportIcon,
-            title: 'Report',
-            to: '/report',
-            parent: 'Report'
-          },
-          {
-            icon: communicationLogIcon,
-            title: 'Communication Log',
-            to: '/communication-log',
-            parent: 'CommunicationLog'
-          },
-          {
-            icon: cmsIcon,
-            title: 'CMS',
-            to: '/cms',
-            parent: 'CMS'
-          },
+
         ],
         testItems: [],
         miniVariant: false,

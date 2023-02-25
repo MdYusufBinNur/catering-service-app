@@ -87,8 +87,10 @@ export default {
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
+    treeShake: true,
     theme: {
       dark: false,
+      light: true,
       themes: {
         dark: {
           primary: colors.blue.darken2,
@@ -97,8 +99,53 @@ export default {
           info: colors.teal.lighten1,
           warning: colors.amber.base,
           error: colors.deepOrange.accent4,
-          success: colors.green.accent3
-        }
+          success: colors.green.accent3,
+          golden: "#a99163"
+        },
+        light_new: {
+          primary: '#3e2c40',
+          background: '#E5E5E5',
+          accent: '#9b8c99',
+          secondary: '#6D7079',
+          accentlight: '#E5E5E5',
+          secondarylight: '#e8e0eb',
+          info: '#00ead6',
+          infolight: '#F7F7F7',
+          active: '#987da1',
+          active2: '#917da1',
+          high: '#402c3d',
+          warning: colors.amber.base,
+          error: colors.deepOrange.accent4,
+          success: colors.green.accent3,
+          tab_active: '#eddeeb',
+          tab_active2: '#F2F2F2',
+          btn_color: '#4F4F4F',
+          card_color: '#f9f6f9',
+          golden: "#a99163"
+
+        },
+        light: {
+          primary: '#2C3040',
+          background: '#E5E5E5',
+          accent: '#8C8E9B',
+          secondary: '#6D7079',
+          accentlight: '#E5E5E5',
+          secondarylight: '#E0E3EB',
+          info: '#00ACEA',
+          infolight: '#F7F7F7',
+          active: '#7D85A1',
+          active2: '#7D85A1',
+          high: '#2C3040',
+          warning: colors.amber.base,
+          error: colors.deepOrange.accent4,
+          success: colors.green.accent3,
+          tab_active: '#DEE2ED',
+          tab_active2: '#F2F2F2',
+          btn_color: '#4F4F4F',
+          card_color: '#F6F7F9',
+          golden: "#a99163"
+
+        },
       }
     }
   },

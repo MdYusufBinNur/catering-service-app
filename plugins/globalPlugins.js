@@ -16,7 +16,7 @@ Vue.mixin({
       return this.$vuetify.breakpoint
     },
     propertyURL() {
-     return 'https://api.gcare.com.bd/';
+     return 'https://service.gcare.com.bd/';
      //    return 'http://127.0.0.1:8000/';
     },
     /**

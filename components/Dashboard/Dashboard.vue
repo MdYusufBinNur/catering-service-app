@@ -58,42 +58,6 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row no-gutters align="center" class="pa-0">
-      <v-col
-        v-for="item in weddingNumbers"
-        :key="item.value"
-        cols="2.5"
-        class="pa-1"
-      >
-        <!-- <v-layout row wrap> -->
-        <v-card flat class="mb-1 transparent radius">
-          <v-skeleton-loader
-            v-if="loading"
-            type="list-item-avatar-two-line"
-          ></v-skeleton-loader>
-          <v-list v-else>
-            <v-list-item>
-              <v-list-item-action class="mr-4">
-                <v-btn fab depressed class="accentlight" small>
-                  <v-icon color="secondary">{{ item.icon }}</v-icon>
-                </v-btn>
-              </v-list-item-action>
-              <v-list-item-content>
-                <v-list-item class="px-0">
-                  <h3>
-                    {{ getValue(item.type)}}
-                  </h3>
-                </v-list-item>
-                <span style="margin-top: -8px; font-size: 12px">
-                  {{ $t(item.text) }}
-                </span>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-        </v-card>
-        <!-- </v-layout> -->
-      </v-col>
-    </v-row>
     <v-row dense class="pa-2">
       <v-col
         cols="12"
@@ -168,7 +132,7 @@
               >
                 <v-card-title class="justify-center text-center">
                   <span class="text-h1 text-xs-center">
-                    {{ getValue('new_user') }}
+
                   </span>
                 </v-card-title>
 
@@ -310,21 +274,10 @@ export default {
   },
   computed: {
     ...mapGetters({
-      dashboardData : 'cms/getDashboardData'
+     // dashboardData : 'cms/getDashboardData'
     })
   },
   watch: {
-    dashboardData: {
-      handler(nv, ov) {
-        if (this.dashboardData) {
-          this.data = JSON.parse(JSON.stringify(this.dashboardData))
-        } else {
-          this.initialize()
-        }
-      },
-      immediate: true,
-      deep: true
-    }
   },
   created() {
 
@@ -335,16 +288,16 @@ export default {
     },
     initChart() {
       this.loadUserData = false
-      this.$store.dispatch('dashboard/initDashboardReport')
+      // this.$store.dispatch('dashboard/initDashboardReport')
     },
     initialize() {
       this.loading = true
-      this.$store.dispatch('cms/initDashboardStatistics')
-        .catch((error) => {
-        })
-        .finally(() => {
-          this.loading = false
-        })
+      // this.$store.dispatch('cms/initDashboardStatistics')
+      //   .catch((error) => {
+      //   })
+      //   .finally(() => {
+      //     this.loading = false
+      //   })
     },
     getValue(type) {
       this.setBarChartData()
