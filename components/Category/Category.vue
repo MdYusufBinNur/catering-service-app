@@ -165,7 +165,7 @@
             mdi-pencil-circle
           </v-icon>
         </v-btn>
-        <v-btn icon plain color="red">
+        <v-btn icon plain color="red" @click="confirmDialog(item)">
           <v-icon >
             mdi-delete-circle
           </v-icon>
@@ -371,6 +371,21 @@
         </v-container>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="confirmDelete" max-width="350" persistent eager>
+      <v-card flat>
+        <v-card-title class="text-center">
+          Are you sure to delete this ?
+        </v-card-title>
+        <v-card-actions class="text-center justify-center" >
+          <v-btn text color="secondary" class="text-capitalize" :loading="deleteLoading" :ripple="false" @click="deleteCategory">
+            Yes
+          </v-btn>
+          <v-btn text class="text-center text-capitalize"  :ripple="false" @click="close">
+            No
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -388,6 +403,8 @@ export default {
       editIcon, trashIcon, eyeIcon,
       btnLoading: false,
       logoPreviewURL: null,
+      confirmDelete: false,
+      deleteLoading: false,
       loading: false,
       loadingSaveData: false,
       editedIndex: -1,
@@ -519,6 +536,7 @@ export default {
     },
     close() {
       this.dialog = false
+      this.confirmDelete = false
       this.editedIndex = -1
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
@@ -527,12 +545,10 @@ export default {
 
     },
 
-    confirmDialog(data, title) {
-      this.title = title
-      this.updateActivityDialog = true
-      this.editedItem.active = title
+    confirmDialog(data) {
       this.editedItem.id = data.id
       this.editedIndex = this.items.indexOf(data)
+      this.confirmDelete = true
     },
     closeDeleteDialog() {
       this.updateActivityDialog = false
@@ -540,28 +556,7 @@ export default {
       this.editedItem.id = null
       this.editedIndex = null
     },
-    makeChange() {
-      this.btnLoading = true
-      // this.editedItem.id = item.id;
-      // this.editedItem.status = title
-      this.$nextTick(() => {
-        this.$axios.post('/update-district', this.editedItem)
-          .then((response) => {
-            if (response.data.error) {
-              return this.$toast.error(response.data.message)
-            }
-            this.$toast.success(response.data.message)
-            Object.assign(this.items[this.editedIndex], response.data.data)
-            this.closeDeleteDialog()
-          })
-          .catch((error) => {
-            console.log(error)
-          })
-          .finally(() => {
-            this.btnLoading = false;
-          })
-      })
-    },
+
     editItem(item) {
       this.editedIndex = this.items.indexOf(item)
 
@@ -578,12 +573,16 @@ export default {
     },
     async saveCategory() {
       this.btnLoading = true
-      await this.$axios.post('/categories', this.editedItem)
+      let formData = new FormData();
+      formData.append('name', this.editedItem.name)
+      formData.append('type', this.editedItem.type)
+      formData.append('image', this.editedItem.image)
+      await this.$axios.post('food-menu-category', formData)
         .then((res) => {
           this.items.unshift(res.data.data)
           this.$toast.success(res.data.message)
           this.close()
-          this.$store.dispatch('location/activeSubs')
+          this.$store.dispatch('categories/initCategories')
 
         })
         .catch((error) => {
@@ -596,29 +595,19 @@ export default {
     async updateCategory() {
       this.btnLoading = true
       let formData = new FormData();
-      formData.append('title', this.editedItem.title)
-      formData.append('offer_type', this.editedItem.offer_type)
-      formData.append('offer_icon', this.editedItem.offer_icon)
-      await this.$axios.post('food-menu-category', formData)
+      formData.append('name', this.editedItem.name)
+      formData.append('type', this.editedItem.type)
+      if (this.editedItem.image)
+      {
+        formData.append('image', this.editedItem.image)
+      }
+      formData.append('_method', 'put')
+      await this.$axios.post('food-menu-category/' + this.editedItem.id, formData)
         .then((response) => {
           this.$toast.success(response.data.message)
-          this.items.push(response.data.data)
+          Object.assign(this.items[this.editedIndex], response.data.data)
           this.close()
-          this.$store.dispatch('cms/initGcareOffer')
-        })
-        .catch((error) => {
-          this.$toast.error(error.response.data.message)
-        })
-        .finally(() => {
-          this.loadingSaveData = false
-        })
-      await this.$axios.post('/food-menu-category', this.editedItem)
-        .then((res) => {
-          this.items.unshift(res.data.data)
-          this.$toast.success(res.data.message)
-          this.close()
-          this.$store.dispatch('location/activeSubs')
-
+          this.$store.dispatch('categories/initCategories')
         })
         .catch((error) => {
           this.$toast.error(error.response.data.message)
@@ -636,6 +625,24 @@ export default {
       this.editedItem.image = null
       this.logoPreviewURL = null
     },
+
+    deleteCategory()
+    {
+      this.deleteLoading = true
+
+      this.$axios.delete('food-menu-category/' + this.editedItem.id)
+        .then((response) => {
+          this.items.splice(this.editedIndex, 1)
+          this.$toast.success(response.data.message)
+          this.close()
+        })
+        .catch((error) => {
+          this.$toast.success(response.data.message)
+        })
+        .finally(() => {
+          this.deleteLoading = false
+        })
+    }
   },
 }
 </script>
