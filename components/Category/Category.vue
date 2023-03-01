@@ -160,7 +160,7 @@
         <!--            </v-list-item>-->
         <!--          </v-list>-->
         <!--        </v-menu>-->
-        <v-btn icon plain  color="primary">
+        <v-btn icon plain  color="primary" @click="editItem(item)">
           <v-icon >
             mdi-pencil-circle
           </v-icon>
@@ -289,18 +289,55 @@
           <v-divider/>
           <v-row no-gutters class="pa-0">
             <v-col cols="12" class="pa-2">
-              <label class="title">Name</label>
+              <label class="">Name</label>
               <v-text-field
                 hide-details
                 outlined
+                dense
                 v-model="editedItem.name"
               ></v-text-field>
+            </v-col>
+            <v-col cols="12" class="pa-2">
+              <label class="">Type</label>
+              <v-select
+                :items="types"
+                hide-details
+                outlined
+                dense
+                v-model="editedItem.type"
+              ></v-select>
+            </v-col>
+            <v-col cols="12" class="pa-2">
+              <label class="">Image</label>
+              <v-file-input
+                hide-details="auto"
+                outlined
+                dense
+                type="file"
+                @change="onLogoInput"
+                append-outer-icon=""
+                prepend-icon=""
+                append-icon="mdi-file"
+                class="rounded-r-0"
+                v-model="editedItem.image"
+                :clearable="false"
+              />
+            </v-col>
+            <v-col cols="12" class="pa-5" md="4" v-show="logoPreviewURL">
+              <v-img :src="logoPreviewURL" contain aspect-ratio="2"/>
+            </v-col>
+            <v-col cols="12" md="3" class="pa-5 px-5" v-show="logoPreviewURL">
+              <v-chip small @click="clearPreview" >
+                <v-icon small class="px-2">
+                  mdi-delete-outline
+                </v-icon>
+                Remove
+              </v-chip>
             </v-col>
           </v-row>
           <v-divider class="mb-5"/>
           <v-col cols="12" align="right" class="pa-2">
             <v-card-actions class="pb-5">
-              <v-spacer></v-spacer>
               <v-btn
                 color="primary"
                 outlined
@@ -308,15 +345,25 @@
                 class="px-8"
                 @click="close"
               >
-                {{ $t('No') }}
+                {{ $t('close') }}
               </v-btn>
               <v-btn
                 class="secondary px-8"
                 rounded
                 :loading="btnLoading"
-                @click="saveSubs"
+                @click="saveCategory"
+                v-show="editedIndex === -1"
               >
-                {{ $t('yes') }}
+                {{ $t('Save') }}
+              </v-btn>
+              <v-btn
+                class="secondary px-8"
+                rounded
+                :loading="btnLoading"
+                v-show="editedIndex !== -1"
+                @click="updateCategory"
+              >
+                {{ $t('Update') }}
               </v-btn>
               <v-spacer></v-spacer>
             </v-card-actions>
@@ -340,6 +387,7 @@ export default {
       search: '',
       editIcon, trashIcon, eyeIcon,
       btnLoading: false,
+      logoPreviewURL: null,
       loading: false,
       loadingSaveData: false,
       editedIndex: -1,
@@ -355,12 +403,15 @@ export default {
       districts: [],
       active: 'Enable',
       activeList: ['Enable', 'Disable'],
+      types: ['food', 'menu'],
       editedItem: {
-        district_id: null,
+        type: null,
+        image: null,
         name: null
       },
       defaultItem: {
-        district_id: null,
+        type: null,
+        image: null,
         name: null
       },
       dialogItems: {
@@ -468,6 +519,7 @@ export default {
     },
     close() {
       this.dialog = false
+      this.editedIndex = -1
       this.$nextTick(() => {
         this.editedItem = Object.assign({}, this.defaultItem)
         this.editedIndex = -1
@@ -510,12 +562,23 @@ export default {
           })
       })
     },
-    openDialog() {
+    editItem(item) {
+      this.editedIndex = this.items.indexOf(item)
+
+      this.editedItem.id = item.id
+      this.editedItem.name = item.name
+      this.editedItem.type = item.type
+      // this.editedItem = Object.assign({}, item)
+      this.logoPreviewURL = item.image ? item.image : null
       this.dialog = true
     },
-    async saveSubs() {
+    openDialog() {
+      this.dialog = true
+      this.logoPreviewURL = null
+    },
+    async saveCategory() {
       this.btnLoading = true
-      await this.$axios.post('/subs', this.editedItem)
+      await this.$axios.post('/categories', this.editedItem)
         .then((res) => {
           this.items.unshift(res.data.data)
           this.$toast.success(res.data.message)
@@ -529,7 +592,50 @@ export default {
         .finally(() => {
           this.btnLoading = false
         })
-    }
+    },
+    async updateCategory() {
+      this.btnLoading = true
+      let formData = new FormData();
+      formData.append('title', this.editedItem.title)
+      formData.append('offer_type', this.editedItem.offer_type)
+      formData.append('offer_icon', this.editedItem.offer_icon)
+      await this.$axios.post('food-menu-category', formData)
+        .then((response) => {
+          this.$toast.success(response.data.message)
+          this.items.push(response.data.data)
+          this.close()
+          this.$store.dispatch('cms/initGcareOffer')
+        })
+        .catch((error) => {
+          this.$toast.error(error.response.data.message)
+        })
+        .finally(() => {
+          this.loadingSaveData = false
+        })
+      await this.$axios.post('/food-menu-category', this.editedItem)
+        .then((res) => {
+          this.items.unshift(res.data.data)
+          this.$toast.success(res.data.message)
+          this.close()
+          this.$store.dispatch('location/activeSubs')
+
+        })
+        .catch((error) => {
+          this.$toast.error(error.response.data.message)
+        })
+        .finally(() => {
+          this.btnLoading = false
+        })
+    },
+
+    onLogoInput(payload) {
+      this.editedItem.image = payload
+      this.logoPreviewURL = URL.createObjectURL(payload);
+    },
+    clearPreview() {
+      this.editedItem.image = null
+      this.logoPreviewURL = null
+    },
   },
 }
 </script>
