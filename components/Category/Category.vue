@@ -2,7 +2,7 @@
   <div>
     <v-row>
       <v-col cols="12" class="pb-2">
-        <TitleCard title="sub district"/>
+        <TitleCard title="Categories"/>
         <v-divider/>
 
       </v-col>

@@ -37,7 +37,8 @@ export default {
       drawer: true,
       navItems: [
         {title: 'Dashboard', icon: 'mdi-home', to: '/dashboard', items: null},
-        {title: 'Category', icon: 'mdi-flask-empty-outline', to: '/categories', items: null},
+        {title: 'Category', icon: 'mdi-svg', to: '/categories', items: null},
+        {title: 'Food Items', icon: 'mdi-format-list-bulleted', to: '/items', items: null},
         {
           title: 'Order',
           path: null,
