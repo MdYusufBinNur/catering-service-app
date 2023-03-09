@@ -2,13 +2,13 @@
   "name": "catering-service-app",
   "version": "1.0.0",
   "private": true,
-  "old_scripts": {
+  "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate"
   },
-  "scripts": {
+  "old_scripts": {
     "dev": "node --openssl-legacy-provider ./node_modules/nuxt/bin/nuxt.js -p=3001",
     "build": "node --openssl-legacy-provider ./node_modules/nuxt/bin/nuxt.js build",
     "start": "node --openssl-legacy-provider ./node_modules/nuxt/bin/nuxt.js start",
