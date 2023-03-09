@@ -12,8 +12,8 @@
       hide-details="auto"
       :item-text="itemText"
       :item-value="itemValue"
-      hide-selected
       multiple
+      small-chips
       @change="onChangeSelectedItem"
       @click="onChangeSelectedItemIndex"
     >
@@ -28,27 +28,6 @@
   export default {
     name: 'SelectCategory',
     props: {
-      initLists: {
-        type: Boolean,
-        required: false,
-        default () {
-          return true
-        }
-      },
-      category: {
-        type: Boolean,
-        required: false,
-        default () {
-          return true
-        }
-      },
-      medType: {
-        type: String,
-        required: true,
-        default() {
-          return 'medicine'
-        }
-      }
     },
 
     data () {
@@ -115,7 +94,7 @@
 
       initialize () {
         this.loading = true
-        this.$store.dispatch('medicine/init')
+        this.$store.dispatch('categories/initCategories')
           .catch((error) => {
             this.$toast.error(error.response.data.message)
           })

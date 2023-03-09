@@ -12,7 +12,7 @@
       <v-row>
         <v-col cols="12">
           <v-btn rounded class="secondary px-10 text-capitalize" @click="openDialog">
-            Add New Category
+            Add New Food item
           </v-btn>
         </v-col>
 
@@ -128,7 +128,7 @@
         </v-chip>
       </template>
       <template #item.image="{item}">
-        <v-img :src="item.image" contain max-width="80" max-height="80"/>
+        <v-img :src="item.item_image" contain max-width="80" max-height="80"/>
       </template>
       <template #item.action="{item}">
         <!--        <v-menu offset-y left>-->
@@ -294,8 +294,27 @@
                 hide-details
                 outlined
                 dense
-                v-model="editedItem.name"
+                v-model="editedItem.item_name"
               ></v-text-field>
+            </v-col>
+            <v-col cols="12" class="pa-2">
+              <label class="">Price</label>
+              <v-text-field
+                hide-details
+                outlined
+                dense
+                type="numeric"
+                v-model="editedItem.item_price"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" class="pa-2">
+              <label class="">Categories</label>
+              <SelectCategory
+                hide-details
+                outlined
+                dense
+                v-model="editedItem.food_item_category_id"
+              />
             </v-col>
             <v-col cols="12" class="pa-2">
               <label class="">Type</label>
@@ -433,12 +452,21 @@ export default {
         discount_type: null,
         trending: null,
         available_on: null,
-        food_item_category_id: null
+        food_item_category_id: []
       },
       defaultItem: {
-        type: null,
         image: null,
-        name: null
+        name: null,
+        item_name: null,
+        item_price: null,
+        item_short_description: null,
+        item_description: null,
+        type: null,
+        discount: null,
+        discount_type: null,
+        trending: null,
+        available_on: null,
+        food_item_category_id: null
       },
       dialogItems: {
         title: null,
@@ -462,7 +490,8 @@ export default {
   computed: {
     headers() {
       return [
-        {text: this.$t('Category Name'), value: 'name', class: 'accentlight',},
+        {text: this.$t('Name'), value: 'item_name', class: 'accentlight',},
+        {text: this.$t('Price'), value: 'item_price', class: 'accentlight',},
         {text: this.$t('Type'), value: 'type', class: 'accentlight',},
         {text: this.$t('Image'), value: 'image', class: 'accentlight',},
 
@@ -529,16 +558,20 @@ export default {
       this.itemsPerPage = parseInt(data);
     },
     initialize() {
-      if (this.categoryList && this.categoryList.length) {
-        this.items = JSON.parse(JSON.stringify(this.categoryList))
-      } else {
-
-        this.loading = true
-        this.$store.dispatch('categories/initCategories').finally(()=>{
-          this.loading= false
+      this.loading = true
+      // this.$store.dispatch('items/initCategories').finally(()=>{
+      //   this.loading= false
+      // })
+      this.$axios.get('food-items')
+        .then((response) => {
+          this.items = response.data.data
         })
-      }
-
+        .catch((error) => {
+          this.$toast.error(error.response.data.message)
+        })
+        .finally(() => {
+          this.loading = false
+        })
     },
     reset() {
       this.$refs.form.reset()
