@@ -123,8 +123,8 @@
     >
 
       <template #item.type="{item}">
-        <v-chip small :ripple="false" :color="item.type === 'menu' ? 'secondary' : 'info'" >
-          {{  item.type }}
+        <v-chip small :ripple="false" :color="item.type === 'menu' ? 'secondary' : 'info'">
+          {{ item.type }}
         </v-chip>
       </template>
       <template #item.image="{item}">
@@ -160,13 +160,13 @@
         <!--            </v-list-item>-->
         <!--          </v-list>-->
         <!--        </v-menu>-->
-        <v-btn icon plain  color="primary" @click="editItem(item)">
-          <v-icon >
+        <v-btn icon plain color="primary" @click="editItem(item)">
+          <v-icon>
             mdi-pencil-circle
           </v-icon>
         </v-btn>
         <v-btn icon plain color="red" @click="confirmDialog(item)">
-          <v-icon >
+          <v-icon>
             mdi-delete-circle
           </v-icon>
         </v-btn>
@@ -279,16 +279,25 @@
     <v-dialog
       v-model="dialog"
       persistent
-      max-width="650"
+      max-width="750"
     >
       <v-card flat light rounded>
-        <v-card-title class="pt-3 pb-0 h_primary">
-          <span class="kep_title">{{ $t('Add New Category') }}</span>
-        </v-card-title>
+        <v-card-actions>
+          <v-card-title class="pt-3 pb-0 h_primary">
+            <span class="kep_title">{{ $t('Add New Category') }}</span>
+          </v-card-title>
+          <v-spacer/>
+          <v-checkbox v-model="setOffer" color="secondary" @click="setDiscountOption()" :ripple="false" dense
+                      hide-details label="Set Discount"></v-checkbox>
+          <v-checkbox v-model="editedItem.trending" color="secondary" :ripple="false" dense
+                      hide-details label="Trending"></v-checkbox>
+
+        </v-card-actions>
+
         <v-container grid-list-sm class="pt-0">
           <v-divider/>
           <v-row no-gutters class="pa-0">
-            <v-col cols="12" class="pa-2">
+            <v-col cols="12" class="pa-2" md="6">
               <label class="">Name</label>
               <v-text-field
                 hide-details
@@ -297,7 +306,7 @@
                 v-model="editedItem.item_name"
               ></v-text-field>
             </v-col>
-            <v-col cols="12" class="pa-2">
+            <v-col cols="12" class="pa-2" md="6">
               <label class="">Price</label>
               <v-text-field
                 hide-details
@@ -307,22 +316,52 @@
                 v-model="editedItem.item_price"
               ></v-text-field>
             </v-col>
-            <v-col cols="12" class="pa-2">
+            <v-col cols="12" class="pa-2" md="6" v-show="setOffer">
+              <label class="">Discount Type</label>
+              <v-select
+                :items="['amount','percentage']"
+                hide-details
+                outlined
+                dense
+                v-model="editedItem.discount_type"
+              ></v-select>
+            </v-col>
+            <v-col cols="12" class="pa-2" md="6" v-show="setOffer">
+              <label class="">Discount Amount</label>
+              <v-text-field
+                hide-details
+                outlined
+                dense
+                type="numeric"
+                v-model="editedItem.discount"
+              ></v-text-field>
+            </v-col>
+            <v-col cols="12" class="pa-2" md="6">
               <label class="">Categories</label>
-              <SelectCategory
+              <v-autocomplete
+                multiple
+                :items="categories"
+                item-text="name"
+                item-value="id"
+                small-chips
+                clearable
+                clear-icon="mdi-close-circle"
                 hide-details
                 outlined
                 dense
                 v-model="editedItem.food_item_category_id"
               />
             </v-col>
-            <v-col cols="12" class="pa-2">
+            <v-col cols="12" class="pa-2" md="6">
               <label class="">Type</label>
               <v-select
                 :items="types"
                 hide-details
                 outlined
                 dense
+                small-chips
+                clearable
+                clear-icon="mdi-close-circle"
                 v-model="editedItem.type"
               ></v-select>
             </v-col>
@@ -346,12 +385,47 @@
               <v-img :src="logoPreviewURL" contain aspect-ratio="2"/>
             </v-col>
             <v-col cols="12" md="3" class="pa-5 px-5" v-show="logoPreviewURL">
-              <v-chip small @click="clearPreview" >
+              <v-chip small @click="clearPreview">
                 <v-icon small class="px-2">
                   mdi-delete-outline
                 </v-icon>
                 Remove
               </v-chip>
+            </v-col>
+            <v-col cols="12" class="pa-2" md="12" sm="12" lg="12">
+              <label class="">Short Details</label>
+              <v-textarea
+                outlined
+                rows="2"
+                dense
+                hide-details
+                v-model="editedItem.item_short_description"
+              ></v-textarea>
+            </v-col>
+            <v-col cols="12" md="12" sm="12" lg="12" class="pa-2">
+              <label class="">Descriptions</label>
+              <v-textarea
+                outlined
+                dense
+                rows="3"
+                hide-details
+                v-model="editedItem.item_description"
+              ></v-textarea>
+            </v-col>
+            <v-col cols="12" md="12" sm="12" lg="12" class="pa-2">
+              <label class="">Available On</label>
+              <v-select
+                :items="['Sat','Sun','Mon','Tue','Wed','Thu', 'Fri']"
+                outlined
+                dense
+                rows="3"
+                multiple
+                small-chips
+                clearable
+                clear-icon="mdi-close-outline-circle"
+                hide-details
+                v-model="editedItem.available_on"
+              ></v-select>
             </v-col>
           </v-row>
           <v-divider class="mb-5"/>
@@ -370,7 +444,7 @@
                 class="secondary px-8"
                 rounded
                 :loading="btnLoading"
-                @click="saveCategory"
+                @click="saveFoodItem"
                 v-show="editedIndex === -1"
               >
                 {{ $t('Save') }}
@@ -395,11 +469,12 @@
         <v-card-title class="text-center">
           Are you sure to delete this ?
         </v-card-title>
-        <v-card-actions class="text-center justify-center" >
-          <v-btn text color="secondary" class="text-capitalize" :loading="deleteLoading" :ripple="false" @click="deleteCategory">
+        <v-card-actions class="text-center justify-center">
+          <v-btn text color="secondary" class="text-capitalize" :loading="deleteLoading" :ripple="false"
+                 @click="deleteCategory">
             Yes
           </v-btn>
-          <v-btn text class="text-center text-capitalize"  :ripple="false" @click="close">
+          <v-btn text class="text-center text-capitalize" :ripple="false" @click="close">
             No
           </v-btn>
         </v-card-actions>
@@ -414,6 +489,7 @@ import {mapGetters} from "vuex";
 import editIcon from 'static/icons/editInfoColor.png'
 import trashIcon from 'static/icons/trashInfo.png'
 import eyeIcon from 'static/icons/eyeInfo.png'
+
 export default {
   name: "Item",
   data() {
@@ -430,8 +506,10 @@ export default {
       dialog: false,
       dialogDelete: false,
       dialogView: false,
+      setOffer: false,
       itemsPerPageArray: [5, 10, 15, 20, 25, 50],
       filter: {},
+      categories: [],
       sortDesc: false,
       page: 1,
       itemsPerPage: 10,
@@ -466,7 +544,7 @@ export default {
         discount_type: null,
         trending: null,
         available_on: null,
-        food_item_category_id: null
+        food_item_category_id: []
       },
       dialogItems: {
         title: null,
@@ -533,7 +611,7 @@ export default {
     categoryList: {
       handler(nv, ov) {
         if (this.categoryList && this.categoryList.length) {
-          this.items = JSON.parse(JSON.stringify(this.categoryList))
+          this.categories = JSON.parse(JSON.stringify(this.categoryList))
         }
       },
       immediate: true,
@@ -559,9 +637,9 @@ export default {
     },
     initialize() {
       this.loading = true
-      // this.$store.dispatch('items/initCategories').finally(()=>{
-      //   this.loading= false
-      // })
+      if (!this.categoryList.length) {
+        this.$store.dispatch('categories/initCategories')
+      }
       this.$axios.get('food-items')
         .then((response) => {
           this.items = response.data.data
@@ -601,11 +679,7 @@ export default {
 
     editItem(item) {
       this.editedIndex = this.items.indexOf(item)
-
-      this.editedItem.id = item.id
-      this.editedItem.name = item.name
-      this.editedItem.type = item.type
-      // this.editedItem = Object.assign({}, item)
+      this.editedItem = Object.assign({}, item)
       this.logoPreviewURL = item.image ? item.image : null
       this.dialog = true
     },
@@ -613,19 +687,32 @@ export default {
       this.dialog = true
       this.logoPreviewURL = null
     },
-    async saveCategory() {
+    async saveFoodItem() {
       this.btnLoading = true
       let formData = new FormData();
-      formData.append('name', this.editedItem.name)
+      formData.append('item_name', this.editedItem.item_name)
+      formData.append('item_price', this.editedItem.item_price)
+      formData.append('item_description', this.editedItem.item_description)
+      formData.append('item_short_description', this.editedItem.item_short_description)
+      // formData.append('food_item_category_id', this.editedItem.food_item_category_id)
+      formData.append('discount', this.editedItem.discount ? this.editedItem.discount : 0)
+      if (this.editedItem.discount){
+        formData.append('discount_type', this.editedItem.discount_type)
+      }
+      formData.append('trending', this.editedItem.trending ? this.editedItem.trending : 0)
+      formData.append('available_on', this.editedItem.available_on)
       formData.append('type', this.editedItem.type)
       formData.append('image', this.editedItem.image)
-      await this.$axios.post('food-menu-category', formData)
+      for (let i = 0; i < this.editedItem.food_item_category_id.length; i++)
+      {
+        formData.append('food_item_category_id[]', this.editedItem.food_item_category_id[i])
+      }
+      await this.$axios.post('food-items', formData)
         .then((res) => {
           this.items.unshift(res.data.data)
           this.$toast.success(res.data.message)
+          this.$store.commit('items/setItems', res.data.data)
           this.close()
-          this.$store.dispatch('categories/initCategories')
-
         })
         .catch((error) => {
           this.$toast.error(error.response.data.message)
@@ -639,8 +726,7 @@ export default {
       let formData = new FormData();
       formData.append('name', this.editedItem.name)
       formData.append('type', this.editedItem.type)
-      if (this.editedItem.image)
-      {
+      if (this.editedItem.image) {
         formData.append('image', this.editedItem.image)
       }
       formData.append('_method', 'put')
@@ -668,8 +754,7 @@ export default {
       this.logoPreviewURL = null
     },
 
-    deleteCategory()
-    {
+    deleteCategory() {
       this.deleteLoading = true
 
       this.$axios.delete('food-menu-category/' + this.editedItem.id)
@@ -684,6 +769,10 @@ export default {
         .finally(() => {
           this.deleteLoading = false
         })
+    },
+    setDiscountOption() {
+      this.editedItem.discount = null
+      this.editedItem.discount_type = null
     }
   },
 }
@@ -691,6 +780,6 @@ export default {
 
 <style scoped>
 html {
-  font-family: 'Poppins',serif;
+  font-family: 'Poppins', serif;
 }
 </style>
