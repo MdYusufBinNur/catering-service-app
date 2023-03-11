@@ -127,6 +127,14 @@
           {{ item.type }}
         </v-chip>
       </template>
+      <template #item.trending="{item}">
+        <v-chip v-show="item.trending" small :ripple="false" color="green lighten-2">
+          Trending
+        </v-chip>
+        <span v-show="!item.trending" class="text-center">
+          -
+        </span>
+      </template>
       <template #item.image="{item}">
         <v-img :src="item.item_image" contain max-width="80" max-height="80"/>
       </template>
@@ -454,7 +462,7 @@
                 rounded
                 :loading="btnLoading"
                 v-show="editedIndex !== -1"
-                @click="updateCategory"
+                @click="updateFoodItem"
               >
                 {{ $t('Update') }}
               </v-btn>
@@ -470,11 +478,11 @@
           Are you sure to delete this ?
         </v-card-title>
         <v-card-actions class="text-center justify-center">
-          <v-btn text color="secondary" class="text-capitalize" :loading="deleteLoading" :ripple="false"
-                 @click="deleteCategory">
+          <v-btn text color="secondary" class="text-capitalize secondary" rounded outlined :loading="deleteLoading" :ripple="false"
+                 @click="deleteFoodItem">
             Yes
           </v-btn>
-          <v-btn text class="text-center text-capitalize" :ripple="false" @click="close">
+          <v-btn text class="text-center text-capitalize" rounded outlined :ripple="false" @click="close">
             No
           </v-btn>
         </v-card-actions>
@@ -569,7 +577,9 @@ export default {
     headers() {
       return [
         {text: this.$t('Name'), value: 'item_name', class: 'accentlight',},
-        {text: this.$t('Price'), value: 'item_price', class: 'accentlight',},
+        {text: this.$t('Price'), value: 'calculated_price', class: 'accentlight',},
+        {text: this.$t('Discount'), value: 'discount', class: 'accentlight',},
+        {text: this.$t('Trending'), value: 'trending', class: 'accentlight text-center',},
         {text: this.$t('Type'), value: 'type', class: 'accentlight',},
         {text: this.$t('Image'), value: 'image', class: 'accentlight',},
 
@@ -680,7 +690,10 @@ export default {
     editItem(item) {
       this.editedIndex = this.items.indexOf(item)
       this.editedItem = Object.assign({}, item)
-      this.logoPreviewURL = item.image ? item.image : null
+      this.editedItem.food_item_category_id = item.food_item_category_id
+      this.editedItem.trending = item.trending ? item.trending : null
+      this.editedItem.discount = item.discount ? item.discount : null
+      this.logoPreviewURL = item.item_image ? item.item_image : null
       this.dialog = true
     },
     openDialog() {
@@ -695,11 +708,11 @@ export default {
       formData.append('item_description', this.editedItem.item_description)
       formData.append('item_short_description', this.editedItem.item_short_description)
       // formData.append('food_item_category_id', this.editedItem.food_item_category_id)
-      formData.append('discount', this.editedItem.discount ? this.editedItem.discount : 0)
+      formData.append('discount', this.editedItem.discount ? JSON.stringify(this.editedItem.discount) : 0)
       if (this.editedItem.discount){
         formData.append('discount_type', this.editedItem.discount_type)
       }
-      formData.append('trending', this.editedItem.trending ? this.editedItem.trending : 0)
+      formData.append('trending', this.editedItem.trending ? JSON.stringify(1) : JSON.stringify(0))
       formData.append('available_on', this.editedItem.available_on)
       formData.append('type', this.editedItem.type)
       formData.append('image', this.editedItem.image)
@@ -721,21 +734,35 @@ export default {
           this.btnLoading = false
         })
     },
-    async updateCategory() {
+    async updateFoodItem() {
       this.btnLoading = true
       let formData = new FormData();
-      formData.append('name', this.editedItem.name)
+      formData.append('item_name', this.editedItem.item_name)
+      formData.append('item_price', this.editedItem.item_price)
+      formData.append('item_description', this.editedItem.item_description)
+      formData.append('item_short_description', this.editedItem.item_short_description)
+      // formData.append('food_item_category_id', this.editedItem.food_item_category_id)
+      formData.append('discount', this.editedItem.discount ? this.editedItem.discount : 0)
+      if (this.editedItem.discount){
+        formData.append('discount_type', this.editedItem.discount_type)
+      }
+      formData.append('trending', this.editedItem.trending ? this.editedItem.trending : 0)
+      formData.append('available_on', this.editedItem.available_on)
       formData.append('type', this.editedItem.type)
+      for (let i = 0; i < this.editedItem.food_item_category_id.length; i++)
+      {
+        formData.append('food_item_category_id[]', this.editedItem.food_item_category_id[i])
+      }
       if (this.editedItem.image) {
         formData.append('image', this.editedItem.image)
       }
       formData.append('_method', 'put')
-      await this.$axios.post('food-menu-category/' + this.editedItem.id, formData)
+      await this.$axios.post('food-items/' + this.editedItem.id, formData)
         .then((response) => {
           this.$toast.success(response.data.message)
           Object.assign(this.items[this.editedIndex], response.data.data)
           this.close()
-          this.$store.dispatch('categories/initCategories')
+          this.$store.commit('items/setItems')
         })
         .catch((error) => {
           this.$toast.error(error.response.data.message)
@@ -754,10 +781,10 @@ export default {
       this.logoPreviewURL = null
     },
 
-    deleteCategory() {
+    deleteFoodItem() {
       this.deleteLoading = true
 
-      this.$axios.delete('food-menu-category/' + this.editedItem.id)
+      this.$axios.delete('food-items/' + this.editedItem.id)
         .then((response) => {
           this.items.splice(this.editedIndex, 1)
           this.$toast.success(response.data.message)
