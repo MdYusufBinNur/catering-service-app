@@ -478,7 +478,7 @@
           Are you sure to delete this ?
         </v-card-title>
         <v-card-actions class="text-center justify-center">
-          <v-btn text color="secondary" class="text-capitalize secondary" rounded outlined :loading="deleteLoading" :ripple="false"
+          <v-btn text color="" class="text-capitalize secondary" rounded outlined :loading="deleteLoading" :ripple="false"
                  @click="deleteFoodItem">
             Yes
           </v-btn>
