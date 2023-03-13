@@ -502,7 +502,7 @@ export default {
   name: "Item",
   data() {
     return {
-      search: '',
+
       editIcon, trashIcon, eyeIcon,
       btnLoading: false,
       logoPreviewURL: null,
@@ -520,6 +520,7 @@ export default {
       categories: [],
       sortDesc: false,
       page: 1,
+      search: '',
       itemsPerPage: 10,
       items: [],
       districts: [],

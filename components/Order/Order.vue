@@ -38,6 +38,10 @@
                @click="getRecords(5)">
           Pending
         </v-btn>
+        <v-btn rounded :outlined="activeBtn !== 6" class="text-capitalize" :class="activeBtn === 6 ? 'secondary' : ''"
+               @click="getRecords(6)">
+          Delivered
+        </v-btn>
         <v-btn rounded :outlined="activeBtn !== 4" class="text-capitalize" :class="activeBtn === 4 ? 'secondary' : ''"
                @click="getRecords(4)">
           Cancelled
@@ -75,9 +79,9 @@
           </template>
 
           <template #item.action="{item}">
-            <v-btn icon color="info" depressed @click="editItem(item)">
-              <v-img contain :src="editIcon" aspect-ratio="2"/>
-            </v-btn>
+<!--            <v-btn icon color="info" depressed @click="editItem(item)">-->
+<!--              <v-img contain :src="editIcon" aspect-ratio="2"/>-->
+<!--            </v-btn>-->
             <v-btn icon color="info" depressed @click="openDeleteItem(item)">
               <v-img contain :src="trashIcon" aspect-ratio="2"/>
             </v-btn>
@@ -306,13 +310,13 @@ export default {
   methods: {
     setStatusColor(item) {
       switch (item) {
-        case 'requested':
+        case 'pending':
           return 'info darken-2'
         case 'delivered':
           return 'green darken-2'
         case 'processing':
           return 'pink darken-2'
-        case 'paused':
+        case 'cancelled':
           return 'red darken-2'
         default:
           return 'black'
@@ -381,6 +385,9 @@ export default {
             break
           case 5:
             this.status = 'pending'
+            break
+          case 6:
+            this.status = 'delivered'
             break
         }
         this.initialize()
