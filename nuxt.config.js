@@ -22,6 +22,7 @@ export default {
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
     // "~layouts/global.css"
+    "~layouts/global.css"
   ],
   target: 'static',
 

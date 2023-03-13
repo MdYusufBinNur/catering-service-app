@@ -123,7 +123,7 @@
     >
 
       <template #item.type="{item}">
-        <v-chip small :ripple="false" :color="item.type === 'menu' ? 'secondary' : 'info'">
+        <v-chip class="text-capitalize" small :ripple="false" :color="item.type === 'menu' ? 'secondary' : 'info'">
           {{ item.type }}
         </v-chip>
       </template>
@@ -478,7 +478,7 @@
           Are you sure to delete this ?
         </v-card-title>
         <v-card-actions class="text-center justify-center">
-          <v-btn text color="" class="text-capitalize secondary" rounded outlined :loading="deleteLoading" :ripple="false"
+          <v-btn text color="" class="text-capitalize text--white white--text secondary" rounded outlined :loading="deleteLoading" :ripple="false"
                  @click="deleteFoodItem">
             Yes
           </v-btn>
@@ -791,7 +791,8 @@ export default {
           this.close()
         })
         .catch((error) => {
-          this.$toast.success(response.data.message)
+          this.$toast.error(error.response.data.message)
+          this.close()
         })
         .finally(() => {
           this.deleteLoading = false

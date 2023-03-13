@@ -10,63 +10,63 @@
         <v-app-bar-nav-icon @click="openDrawer"></v-app-bar-nav-icon>
 
     <v-toolbar-items v-show="bp.mdAndUp">
-      <v-col cols="8" class="px-0">
-        <v-text-field
-          rounded
-          color="secondary"
-          background-color="white"
-          :placeholder="$t('Search')"
-          required
-          clearable
-        >
-          <template v-slot:append>
-            <v-icon style="margin-right: -12px" right>
-              mdi-magnify
-            </v-icon>
-          </template>
-        </v-text-field>
-      </v-col>
-      <v-col cols="5">
-        <v-menu
-          v-model="menu2"
-          :close-on-content-click="false"
+<!--      <v-col cols="8" class="px-0">-->
+<!--        <v-text-field-->
+<!--          rounded-->
+<!--          color="secondary"-->
+<!--          background-color="white"-->
+<!--          :placeholder="$t('Search')"-->
+<!--          required-->
+<!--          clearable-->
+<!--        >-->
+<!--          <template v-slot:append>-->
+<!--            <v-icon style="margin-right: -12px" right>-->
+<!--              mdi-magnify-->
+<!--            </v-icon>-->
+<!--          </template>-->
+<!--        </v-text-field>-->
+<!--      </v-col>-->
+<!--      <v-col cols="5">-->
+<!--        <v-menu-->
+<!--          v-model="menu2"-->
+<!--          :close-on-content-click="false"-->
 
-          transition="scale-transition"
-          offset-y
-          min-width="auto"
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              rounded
-              color="secondary"
-              background-color="white"
-              :placeholder="$t('SEARCH_BY_DATE')"
-              hide-details="auto"
-              required
-              v-model="date"
-              readonly
-              v-bind="attrs"
-              v-on="on"
-              clearable
-            >
-              <template v-slot:append>
-                <div style="margin-right: -5px">
-                  <v-img :src="date_icon" width="25" class="mt-1" style="margin-right: -10px">
+<!--          transition="scale-transition"-->
+<!--          offset-y-->
+<!--          min-width="auto"-->
+<!--        >-->
+<!--          <template v-slot:activator="{ on, attrs }">-->
+<!--            <v-text-field-->
+<!--              rounded-->
+<!--              color="secondary"-->
+<!--              background-color="white"-->
+<!--              :placeholder="$t('SEARCH_BY_DATE')"-->
+<!--              hide-details="auto"-->
+<!--              required-->
+<!--              v-model="date"-->
+<!--              readonly-->
+<!--              v-bind="attrs"-->
+<!--              v-on="on"-->
+<!--              clearable-->
+<!--            >-->
+<!--              <template v-slot:append>-->
+<!--                <div style="margin-right: -5px">-->
+<!--                  <v-img :src="date_icon" width="25" class="mt-1" style="margin-right: -10px">-->
 
-                  </v-img>
-                </div>
+<!--                  </v-img>-->
+<!--                </div>-->
 
-              </template>
+<!--              </template>-->
 
-            </v-text-field>
-          </template>
-          <v-date-picker
-            v-model="date"
-            header-color="active2"
-            @input="menu2 = false"
-          ></v-date-picker>
-        </v-menu>
-      </v-col>
+<!--            </v-text-field>-->
+<!--          </template>-->
+<!--          <v-date-picker-->
+<!--            v-model="date"-->
+<!--            header-color="active2"-->
+<!--            @input="menu2 = false"-->
+<!--          ></v-date-picker>-->
+<!--        </v-menu>-->
+<!--      </v-col>-->
     </v-toolbar-items>
 
     <v-spacer></v-spacer>

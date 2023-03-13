@@ -7,7 +7,7 @@
       color="white"
     >
       <v-list-item-title class="text-md-h5 black--text">
-        G-Care Admin
+        Service Admin
       </v-list-item-title>
     </v-list-item>
     <v-list rounded dense>
@@ -39,16 +39,22 @@ export default {
         {title: 'Dashboard', icon: 'mdi-home', to: '/dashboard', items: null},
         {title: 'Category', icon: 'mdi-svg', to: '/categories', items: null},
         {title: 'Food Items', icon: 'mdi-format-list-bulleted', to: '/items', items: null},
+        // {
+        //   title: 'Order',
+        //   path: null,
+        //   icon: 'mdi-google-maps',
+        //   items: [
+        //     {title: 'All', icon: 'mdi-pencil', to: '/order'},
+        //     {title: 'Pending', icon: 'mdi-close', to: '/'},
+        //     {title: 'Cancelled', icon: 'mdi-close', to: '/'},
+        //   ]
+        // },
         {
           title: 'Order',
-          path: null,
+          to: '/order',
           icon: 'mdi-google-maps',
-          items: [
-            {title: 'All', icon: 'mdi-pencil', to: '/'},
-            {title: 'Pending', icon: 'mdi-close', to: '/'},
-            {title: 'Cancelled', icon: 'mdi-close', to: '/'},
-          ]
-        }
+          items: null
+        },
       ]
     }
   },

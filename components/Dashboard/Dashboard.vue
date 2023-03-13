@@ -2,59 +2,80 @@
   <v-container fluid fill-height class="pa-0">
     <v-row no-gutters align="center">
       <v-col cols="12" class="pb-2">
-        <title-card title="dashboard" />
+        <title-card title="dashboard"/>
         <v-divider></v-divider
         >
       </v-col>
 
-      <v-col>
-        <v-card class="transparent" flat tile>
-          <span class="ppns_title_3 pl-1">
-            {{ $t('Statistics') }}
-          </span>
+    </v-row>
+    <v-row no-gutters>
+      <v-col cols="12" md="4" lg="4" class="pa-1">
+        <v-card flat class="px-2">
+          <v-list>
+            <v-list-item>
+              <v-list-item-action class="mr-4">
+                <v-btn fab depressed class="accentlight" small>
+                  <v-icon color="secondary">mdi-accounts</v-icon>
+                </v-btn>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item class="px-0">
+                  <h3>
+                    Total Users
+                  </h3>
+                </v-list-item>
+                <span style="margin-top: -8px; font-size: 12px">
+                  {{ 200 }}
+                </span>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
         </v-card>
       </v-col>
-      <v-col md="auto" align="right" class="px-1">
-        <v-card class="py-2 transparent" flat tile>
-          <v-chip color="active2 white--text" small dark class="px-7">
-            <span class="caption"> {{ $t('last 30 day') }}</span>
-          </v-chip>
+      <v-col cols="12" md="4" lg="4" class="pa-1">
+        <v-card flat class="px-2">
+          <v-list>
+            <v-list-item>
+              <v-list-item-action class="mr-4">
+                <v-btn fab depressed class="accentlight" small>
+                  <v-icon color="secondary">mdi-accounts</v-icon>
+                </v-btn>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item class="px-0">
+                  <h3>
+                    Total Users
+                  </h3>
+                </v-list-item>
+                <span style="margin-top: -8px; font-size: 12px">
+                  {{ 200 }}
+                </span>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
         </v-card>
       </v-col>
-      <v-col md="auto" align="right">
-        <v-card class="transparent py-2" flat tile>
-          <v-menu
-            ref="menu"
-            v-model="menu"
-            :close-on-content-click="false"
-            :return-value.sync="date"
-            transition="scale-transition"
-            offset-y
-          >
-            <template #activator="{ on, attrs }">
-              <v-chip
-                small
-                color="tab_active2"
-                v-bind="attrs"
-                class="px-2"
-                v-on="on"
-              >
-                <v-icon small class="px-3"> mdi-calendar </v-icon>
-                <span class="caption">{{
-                    $t('select date from calender')
-                  }}</span>
-              </v-chip>
-            </template>
-            <v-date-picker v-model="date" no-title range scrollable>
-              <v-spacer />
-              <v-btn text color="primary" @click="close">
-                {{ $t('close') }}
-              </v-btn>
-              <v-btn text color="primary" @click="close">
-                {{ $t('save') }}
-              </v-btn>
-            </v-date-picker>
-          </v-menu>
+      <v-col cols="12" md="4" lg="4" class="pa-1">
+        <v-card flat class="px-2">
+          <v-list>
+            <v-list-item>
+              <v-list-item-action class="mr-4">
+                <v-btn fab depressed class="accentlight" small>
+                  <v-icon color="secondary">mdi-accounts</v-icon>
+                </v-btn>
+              </v-list-item-action>
+              <v-list-item-content>
+                <v-list-item class="px-0">
+                  <h3>
+                    Total Users
+                  </h3>
+                </v-list-item>
+                <span style="margin-top: -8px; font-size: 12px">
+                  {{ 200 }}
+                </span>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
         </v-card>
       </v-col>
     </v-row>
@@ -68,33 +89,32 @@
         :style="bp.mdAndUp ? 'height: 400px' : ''"
       >
         <v-layout row wrap>
-<!--          <v-flex xs12 sm6 md5 lg5 class="rounded mt-3 px-1">-->
-<!--            <v-skeleton-loader-->
-<!--              v-if="loading"-->
-<!--              class="pa-5 px-2 py-3"-->
-<!--              type="card"-->
-<!--            ></v-skeleton-loader>-->
-<!--            <pie-chart-component-->
-<!--              chart-title="Doctors and Users"-->
-<!--              chart-sub-title="all"-->
-<!--              chart-desc="Doctors and Users"-->
-<!--              :chart-data="marriedCompData"-->
-<!--              property-id="dashMarriedStatChart"-->
-<!--              class-name="dashboardWeddingChart"-->
-<!--            />-->
-<!--          </v-flex>-->
+          <!--          <v-flex xs12 sm6 md5 lg5 class="rounded mt-3 px-1">-->
+          <!--            <v-skeleton-loader-->
+          <!--              v-if="loading"-->
+          <!--              class="pa-5 px-2 py-3"-->
+          <!--              type="card"-->
+          <!--            ></v-skeleton-loader>-->
+          <!--            <pie-chart-component-->
+          <!--              chart-title="Doctors and Users"-->
+          <!--              chart-sub-title="all"-->
+          <!--              chart-desc="Doctors and Users"-->
+          <!--              :chart-data="marriedCompData"-->
+          <!--              property-id="dashMarriedStatChart"-->
+          <!--              class-name="dashboardWeddingChart"-->
+          <!--            />-->
+          <!--          </v-flex>-->
           <v-flex xs12 sm6 md12 lg12 class="px-1 py-3">
             <v-card flat class="mb-2 transparent radius">
-              <v-skeleton-loader
-                v-if="loading || !show"
-                class="pa-5 px-2 py-6"
-                type="card"
-                :title="false"
-              ></v-skeleton-loader>
+<!--              <v-skeleton-loader-->
+<!--                v-if="loading || !show"-->
+<!--                class="pa-5 px-2 py-6"-->
+<!--                type="card"-->
+<!--                :title="false"-->
+<!--              ></v-skeleton-loader>-->
               <bar-chart-component
-                v-else
-                chart-title="Registrations per month"
-                chart-desc="Registrations"
+                chart-title="Per month order"
+                chart-desc="Order"
                 property-id="dashboardAccChart"
                 :axis-data="regBarAxis"
                 :chart-data="regBarData"
@@ -109,7 +129,6 @@
         md="3"
         sm="12"
         lg="3"
-        v-if="show"
         :class="bp.mdAndUp ? 'pl-5' : 'mt-9'"
         :style="bp.mdAndUp ? 'height: 400px; margin-top: 12px' : ''"
       >
@@ -132,7 +151,7 @@
               >
                 <v-card-title class="justify-center text-center">
                   <span class="text-h1 text-xs-center">
-
+                    {{ 30 }}
                   </span>
                 </v-card-title>
 
@@ -148,7 +167,7 @@
                 >
                   {{ $t('view details here') }}
                 </v-card-subtitle>
-                <v-spacer />
+                <v-spacer/>
                 <v-card-actions class="justify-center align-self-end mt-2">
                   <v-btn
                     rounded
@@ -162,7 +181,8 @@
                       <v-list-item-action class="pa-0 mx-0 pl-3">
                         <v-avatar size="18">
                           <v-icon color="white"
-                          >mdi-arrow-right-thin-circle-outline</v-icon
+                          >mdi-arrow-right-thin-circle-outline
+                          </v-icon
                           >
                         </v-avatar>
                       </v-list-item-action>
@@ -228,8 +248,8 @@ export default {
 
       ],
       marriedCompData: [
-        { value: 6000, name: 'Married' },
-        { value: 12000, name: 'Un-Married' },
+        {value: 6000, name: 'Married'},
+        {value: 12000, name: 'Un-Married'},
       ],
       regBarData: [
         {
@@ -274,11 +294,10 @@ export default {
   },
   computed: {
     ...mapGetters({
-     // dashboardData : 'cms/getDashboardData'
+      // dashboardData : 'cms/getDashboardData'
     })
   },
-  watch: {
-  },
+  watch: {},
   created() {
 
   },
@@ -301,7 +320,7 @@ export default {
     },
     getValue(type) {
       this.setBarChartData()
-      switch (type){
+      switch (type) {
         case 'user':
           return this.data.user
         case 'doctor':
@@ -314,8 +333,7 @@ export default {
           return this.data.user_30
       }
     },
-    setBarChartData()
-    {
+    setBarChartData() {
       this.regBarAxis = this.data.months
       this.regBarData[0].data = this.data.monthsBaseUser
       this.show = true
